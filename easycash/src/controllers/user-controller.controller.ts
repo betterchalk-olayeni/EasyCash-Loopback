@@ -113,23 +113,24 @@ export class UserControllerController {
 //     return this.userRepository.findById(id, filter);
 //   }
 
-//   @patch('/user/{id}')
-//   @response(204, {
-//     description: 'User PATCH success',
-//   })
-//   async updateById(
-//     @param.path.string('id') id: string,
-//     @requestBody({
-//       content: {
-//         'application/json': {
-//           schema: getModelSchemaRef(User, {partial: true}),
-//         },
-//       },
-//     })
-//     user: User,
-//   ): Promise<void> {
-//     await this.userRepository.updateById(id, user);
-//   }
+  @patch('/user/{id}')
+  @response(204, {
+    description: 'User PATCH success',
+  })
+  async updateById(
+    @param.path.string('id') id: string,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(User, {exclude:["id", "email", "accounts"],partial: true}),
+        },
+      },
+    })
+    {balance}: User,
+    user:User
+  ): Promise<void> {
+    await this.userService.updateCash(id, balance, user);
+  }
 
 //   @put('/user/{id}')
 //   @response(204, {

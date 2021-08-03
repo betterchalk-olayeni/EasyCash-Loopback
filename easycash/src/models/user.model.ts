@@ -23,12 +23,16 @@ export class User extends Entity {
     type: 'number',
     default: 0,
   })
-  balance?: number;
+  balance: number;
 
 
   constructor(data?: Partial<User>) {
     super(data);
   }
+
+  // increaseBalance(amount:number){
+  //   User.balance += amount
+  // }
 }
 
 export interface UserRelations {

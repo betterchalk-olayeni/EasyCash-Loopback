@@ -1,0 +1,17 @@
+  @patch('/user/{id}')
+  @response(204, {
+    description: 'User PATCH success',
+  })
+  async updateById(
+    @param.path.string('id') id: string,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(User, {exclude:["id", "email", "accounts"], partial: true}),
+        },
+      },
+    })
+    user: User,
+  ): Promise<void> {
+    return this.userService.updateCash(id, user.balance);
+  }
