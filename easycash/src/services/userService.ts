@@ -20,10 +20,10 @@ export class UserService {
     //     idUser.increaseBalance(amount);
     // }
 
-    async updateCash(id: string, balance:number, user: User) {
+    async updateCash(id: string, balance:number) {
         let foundId = await this.userRepo.findById(id);
         foundId.balance+= balance;
-        return this.userRepo.updateById(id, user)
+        return this.userRepo.updateById(id, foundId)
     }
 
 }

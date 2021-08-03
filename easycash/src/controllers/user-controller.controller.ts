@@ -127,9 +127,8 @@ export class UserControllerController {
       },
     })
     {balance}: User,
-    user:User
   ): Promise<void> {
-    await this.userService.updateCash(id, balance, user);
+    await this.userService.updateCash(id, balance);
   }
 
 //   @put('/user/{id}')

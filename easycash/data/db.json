@@ -1,6 +1,6 @@
 {
   "ids": {
-    "User": 4,
+    "User": 5,
     "Transfer": 1,
     "BankInfo": 1,
     "Account": 1
@@ -9,7 +9,8 @@
     "User": {
       "1": "{\"email\":\"Olayeni\",\"balance\":0,\"id\":\"1\"}",
       "2": "{\"email\":\"Mobolaji\",\"balance\":0,\"id\":\"2\"}",
-      "3": "{\"email\":\"yen@gmail.com\",\"balance\":1345,\"id\":\"3\"}"
+      "3": "{\"email\":\"yen@gmail.com\",\"balance\":11344,\"id\":\"3\"}",
+      "4": "{\"email\":\"tunde@solabi.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"GTBank\",\"accountNum\":\"0123456789\"}}],\"balance\":800,\"id\":\"4\"}"
     },
     "Transfer": {},
     "BankInfo": {},
