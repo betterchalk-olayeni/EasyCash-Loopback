@@ -1,0 +1,18 @@
+{
+  "ids": {
+    "User": 4,
+    "Transfer": 1,
+    "BankInfo": 1,
+    "Account": 1
+  },
+  "models": {
+    "User": {
+      "1": "{\"email\":\"Olayeni\",\"balance\":0,\"id\":\"1\"}",
+      "2": "{\"email\":\"Mobolaji\",\"balance\":0,\"id\":\"2\"}",
+      "3": "{\"email\":\"yen@gmail.com\",\"balance\":90,\"id\":\"3\"}"
+    },
+    "Transfer": {},
+    "BankInfo": {},
+    "Account": {}
+  }
+}

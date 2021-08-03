@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property,} from '@loopback/repository';
+import {Account} from './account.model'
 
 @model()
 export class User extends Entity {
@@ -15,11 +16,8 @@ export class User extends Entity {
   })
   email: string;
 
-  @property({
-    type: 'array',
-    itemType: 'string',
-  })
-  accounts?: string[];
+  @property.array(Account)
+  accounts?: Account[];
 
   @property({
     type: 'number',

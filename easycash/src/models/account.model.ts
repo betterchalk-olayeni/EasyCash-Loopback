@@ -1,33 +1,34 @@
 import { Entity, model, property } from '@loopback/repository';
 
-enum typeEnum {
-  Bank = 'Bank',
-  Cash = 'Cash',
-  CreditCard = 'Credit Card'
+enum AccountType {
+  BANK = 'Bank',
+  CASH = 'Cash',
+  CREDITCARD = 'Credit Card'
 }
 
+@model()
+class BankInfo {
+  @property()
+  bankName: string
+  @property()
+  accountNum: string
+}
 
 @model()
 export class Account extends Entity {
   @property({
     type: 'string',
-    id: true,
-    generated: false,
   })
   id?: string;
 
 
   @property({
-    type: 'string',
     required: true,
-
   })
-  type: typeEnum;
+  type: AccountType;
 
-  @property({
-    type: 'object',
-  })
-  bankInfo?: object;
+  @property()
+  bankInfo?: BankInfo
 
 
   constructor(data?: Partial<Account>) {
@@ -49,6 +50,6 @@ export type AccountWithRelations = Account & AccountRelations;
   // })
   // type: string[];
   // jsonSchema: {
-    //   enum: Object.values(typeEnum),
+    //   enum: Object.values(AccountType),
     // },
 
