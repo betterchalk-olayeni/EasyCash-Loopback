@@ -60,23 +60,23 @@ export class UserControllerController {
 //     return this.userRepository.count(where);
 //   }
 
-//   @get('/user')
-//   @response(200, {
-//     description: 'Array of User model instances',
-//     content: {
-//       'application/json': {
-//         schema: {
-//           type: 'array',
-//           items: getModelSchemaRef(User, {includeRelations: true}),
-//         },
-//       },
-//     },
-//   })
-//   async find(
-//     @param.filter(User) filter?: Filter<User>,
-//   ): Promise<User[]> {
-//     return this.userRepository.find(filter);
-//   }
+  @get('/user')
+  @response(200, {
+    description: 'Array of User model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(User, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async find(
+    @param.filter(User) filter?: Filter<User>,
+  ): Promise<User[]> {
+    return this.userService.findAllUsers();
+  }
 
 //   @patch('/user')
 //   @response(200, {

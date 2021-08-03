@@ -25,18 +25,18 @@ export class Transfer extends Entity {
   @property({
     type: 'string',
   })
-  recipientId?: string;
+  recipientId: string;
 
   @property({
     type: 'number',
   })
-  amount?: number;
+  amount: number;
 
   @property({
     type: 'string',
     required: true,
   })
-  sourceAcctId: string;
+  sourceAcctId?: string;
 
   @property({
     type: 'string',
