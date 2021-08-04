@@ -17,6 +17,8 @@ import {
   del,
   requestBody,
   response,
+  RequestContext,
+  RestBindings,
 } from '@loopback/rest';
 import {Transfer, User } from '../models';
 import {TransferRepository} from '../repositories';
@@ -28,6 +30,7 @@ export class TransferControllerController {
     public userService : UserService,
     @repository(TransferRepository)
     public transferRepository : TransferRepository,
+    @inject(RestBindings.Http.CONTEXT) private requestCtx: RequestContext
   ) {}
 
   @post('/transfer')
@@ -48,8 +51,15 @@ export class TransferControllerController {
       },
     })
     transfer: Omit<Transfer, 'id'>,  
-  ): Promise<Transfer> {
-    return this.userService.transferMoney(transfer)
+  ) {
+    const {response} = this.requestCtx;
+    try{
+      return response.status(200).send(await this.userService.transferMoney(transfer))
+    }
+    catch(error){
+      return response.status(430).send(`${error}`)
+    }
+    
   }
 
   // @get('/transfer/count')

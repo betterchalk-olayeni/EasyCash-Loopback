@@ -52,7 +52,7 @@ export class UserService {
         }
         
         else{
-            throw new Error("The sender has insufficient balance")
+            throw new Error('The sender has insufficient balance')
         }
 
 
