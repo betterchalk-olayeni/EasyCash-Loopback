@@ -18,7 +18,7 @@ import {
   requestBody,
   response,
 } from '@loopback/rest';
-import {Transfer } from '../models';
+import {Transfer, User } from '../models';
 import {TransferRepository} from '../repositories';
 import {UserService} from '../services/userService'
 
@@ -26,8 +26,8 @@ export class TransferControllerController {
   constructor(
     @inject("user_service")
     public userService : UserService,
-    // @repository(TransferRepository)
-    // public transferRepository : TransferRepository,
+    @repository(TransferRepository)
+    public transferRepository : TransferRepository,
   ) {}
 
   @post('/transfer')
@@ -41,16 +41,15 @@ export class TransferControllerController {
         'application/json': {
           schema: getModelSchemaRef(Transfer, {
             title: 'NewTransfer',
-            exclude: ['id', "sourceAcctId", "destAcctId", "txnDate", "status" ],
+            exclude: ['id', "txnDate", "status" ],
             partial: true
           }),
         },
       },
     })
-    transfer: Omit<Transfer, 'id'>,
-    {senderId, recipientId, amount}: Transfer    
+    transfer: Omit<Transfer, 'id'>,  
   ): Promise<Transfer> {
-    return this.userService.transferMoney(senderId, recipientId, amount, transfer)
+    return this.userService.transferMoney(transfer)
   }
 
   // @get('/transfer/count')
@@ -64,23 +63,23 @@ export class TransferControllerController {
   //   return this.transferRepository.count(where);
   // }
 
-  // @get('/transfer')
-  // @response(200, {
-  //   description: 'Array of Transfer model instances',
-  //   content: {
-  //     'application/json': {
-  //       schema: {
-  //         type: 'array',
-  //         items: getModelSchemaRef(Transfer, {includeRelations: true}),
-  //       },
-  //     },
-  //   },
-  // })
-  // async find(
-  //   @param.filter(Transfer) filter?: Filter<Transfer>,
-  // ): Promise<Transfer[]> {
-  //   return this.transferRepository.find(filter);
-  // }
+  @get('/transfer')
+  @response(200, {
+    description: 'Array of Transfer model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Transfer, {includeRelations: true}),
+        },
+      },
+    },
+  })
+  async find(
+    @param.filter(Transfer) filter?: Filter<Transfer>,
+  ): Promise<Transfer[]> {
+    return this.userService.getAllTransfers();
+  }
 
   // @patch('/transfer')
   // @response(200, {

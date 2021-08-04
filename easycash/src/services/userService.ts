@@ -1,5 +1,6 @@
 import { repository } from "@loopback/repository";
-import { Transfer, User } from "../models";
+import { stat } from "fs";
+import { Transfer, TransferStatus, User } from "../models";
 import { TransferRepository, UserRepository } from "../repositories";
 
 export class UserService {
@@ -15,11 +16,6 @@ export class UserService {
         return this.userRepo.create(user)
     }
 
-    // async updateCash(id: string, amount: number) {
-    //     const idUser = await this.userRepo.findById(id);
-    //     idUser.increaseBalance(amount);
-    // }
-
     async updateCash(id: string, balance: number) {
         let foundId = await this.userRepo.findById(id);
         foundId.balance += balance;
@@ -30,25 +26,55 @@ export class UserService {
         return this.userRepo.find();
     }
 
-    async transferMoney(senderId: string, recipientId: string, amount: number, transfer:Transfer) {
+    async getAllTransfers(){
+        return this.transferRepository.find();
+    }
+
+    async transferMoney({senderId, recipientId, amount, sourceAcctId, destAcctId, txnDate, status}:Transfer) {
+        
         let sender = await this.userRepo.findById(senderId);
         let receiver = await this.userRepo.findById(recipientId);
 
-        if (sender.balance > 0) {
+        sourceAcctId = sender.accounts[0].bankInfo?.accountNum as string;
+        destAcctId = receiver.accounts[0].bankInfo?.accountNum as string;
+
+        if(sender.balance > 0){
             sender.balance -= amount;
             receiver.balance += amount;
 
-            let updateSender = this.userRepo.updateById(senderId, sender);
-            let updateReceiver = this.userRepo.updateById(recipientId, receiver);
+            await this.userRepo.updateById(sender.id, sender);
+            await this.userRepo.updateById(receiver.id, receiver);
 
-            return this.transferRepository.create(transfer);
+            txnDate = new Date().toISOString();
+            status = TransferStatus.COMPLETED;
+            
+            return this.transferRepository.create({senderId, recipientId, amount, sourceAcctId, destAcctId, txnDate, status});
         }
-
+        
         else{
-            throw new Error("Insufficient balance");
+            throw new Error("The sender has insufficient balance")
         }
 
 
     }
 
 }
+
+
+
+// if (sender.balance > 0) {
+//     sender.balance -= amount;
+//     receiver.balance += amount;
+
+//     await this.userRepo.updateById(sender.id, sender);
+//     await this.userRepo.updateById(receiver.id, receiver);
+
+
+
+
+//     return this.transferRepository.create(transfer);
+// }
+
+// else{
+//     throw new Error("Insufficient balance");
+// }

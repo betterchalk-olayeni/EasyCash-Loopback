@@ -1,7 +1,7 @@
 {
   "ids": {
-    "User": 5,
-    "Transfer": 1,
+    "User": 6,
+    "Transfer": 2,
     "BankInfo": 1,
     "Account": 1
   },
@@ -10,9 +10,12 @@
       "1": "{\"email\":\"Olayeni\",\"balance\":0,\"id\":\"1\"}",
       "2": "{\"email\":\"Mobolaji\",\"balance\":0,\"id\":\"2\"}",
       "3": "{\"email\":\"yen@gmail.com\",\"balance\":11344,\"id\":\"3\"}",
-      "4": "{\"email\":\"tunde@solabi.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"GTBank\",\"accountNum\":\"0123456789\"}}],\"balance\":800,\"id\":\"4\"}"
+      "4": "{\"email\":\"tunde@solabi.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"GTBank\",\"accountNum\":\"0123456789\"}}],\"balance\":16300,\"id\":\"4\"}",
+      "5": "{\"email\":\"blossom@gmail.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"UBA\",\"accountNum\":\"2100547896\"}}],\"balance\":500,\"id\":\"5\"}"
     },
-    "Transfer": {},
+    "Transfer": {
+      "1": "{\"senderId\":\"5\",\"recipientId\":\"4\",\"amount\":15500,\"sourceAcctId\":\"2100547896\",\"destAcctId\":\"0123456789\",\"txnDate\":\"2021-08-04T09:52:38.336Z\",\"status\":\"Completed\",\"id\":\"1\"}"
+    },
     "BankInfo": {},
     "Account": {}
   }
