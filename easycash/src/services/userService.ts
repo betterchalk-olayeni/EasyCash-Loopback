@@ -38,7 +38,7 @@ export class UserService {
         sourceAcctId = sender.accounts[0].bankInfo?.accountNum as string;
         destAcctId = receiver.accounts[0].bankInfo?.accountNum as string;
 
-        if(sender.balance > 0){
+        if(sender.balance >= amount){
             sender.balance -= amount;
             receiver.balance += amount;
 
