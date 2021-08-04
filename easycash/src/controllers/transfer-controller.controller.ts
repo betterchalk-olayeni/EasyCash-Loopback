@@ -57,7 +57,7 @@ export class TransferControllerController {
       return response.status(200).send(await this.userService.transferMoney(transfer))
     }
     catch(error){
-      return response.status(430).send(`${error}`)
+      return response.status(400).send(`${error}`)
     }
     
   }
