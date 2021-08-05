@@ -30,7 +30,7 @@ export class UserControllerController {
     public userService : UserService,
   ) {}
 
-  @post('/user/signup')
+  @post('/api/signup')
   @response(200, {
     description: 'User model instance',
     content: {'application/json': {schema: getModelSchemaRef(User)}},
@@ -50,6 +50,29 @@ export class UserControllerController {
   ){
     return this.userService.createUser(user);
   }
+
+  
+  @post('/api/login')
+  @response(200, {
+    description: 'User model instance',
+    content: {'application/json': {schema: getModelSchemaRef(User)}},
+  })
+  async login(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(User, {
+            title: 'Logged in',
+            exclude: ['id', "balance", "accounts"],
+          }),
+        },
+      },
+    })
+    user: Omit<User, 'id'>,
+  ) {
+    return this.userService.login(user);
+  }
+
 
 //   @get('/user/count')
 //   @response(200, {

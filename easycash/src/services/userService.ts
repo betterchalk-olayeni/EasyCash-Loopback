@@ -8,8 +8,9 @@ import * as bcrypt from 'bcrypt';
 const saltRounds = 10;
 
 //Custom Errors
-const passwordLength = "Password must be at least 5 characters";
-const wrongBalance = "Balance cannot be a negative number";
+const existingUserError = "User already exists";
+const loginError = "Invalid Password";
+const noUser = "User does not exist";
 
 export class UserService {
 
@@ -24,8 +25,10 @@ export class UserService {
 
         let {email, password, balance, accounts} = user;
 
-        if (password.length > 5){
+        //Check for already existing Email
+        const existingUser = await this.userRepo.findOne({where: {email: email}})
 
+        if(!existingUser){
             //Hashing user's password
             bcrypt.hash(password, saltRounds, (err, hash) => {
                 password = hash;
@@ -34,11 +37,32 @@ export class UserService {
         }
 
         else{
-            throw new HttpErrors.Unauthorized(passwordLength)
+            throw new HttpErrors.Unauthorized(existingUserError)
         }
 
+    }
 
-        
+    
+    async login(user:User){
+        const {email, password} = user;
+
+        const dbUser = await this.userRepo.findOne({where: {email:email}});
+
+        if (dbUser){
+            bcrypt.compare(password, dbUser.password, (err, result)=>{
+                if (result === true){
+                    console.log("Logged In");
+                    return dbUser;
+                }
+                else{
+                    throw new HttpErrors.Unauthorized(loginError);
+                }
+            } )
+        }
+
+        else{
+            throw new HttpErrors.Unauthorized(noUser);
+        }
 
     }
 
