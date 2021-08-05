@@ -8,7 +8,7 @@ export class User extends Entity {
     id: true,
     generated: false,
   })
-  id?: string;
+  id: string;
 
   @property({
     type: 'string',
@@ -31,6 +31,10 @@ export class User extends Entity {
   })
   balance: number;
 
+  @property({
+    type: 'string',
+  })
+  token?: string;
 
   constructor(data?: Partial<User>) {
     super(data);

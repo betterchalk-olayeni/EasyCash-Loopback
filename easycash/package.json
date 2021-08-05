@@ -58,6 +58,7 @@
     "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.0.1",
     "env": "0.0.2",
+    "lodash": "^4.17.21",
     "mongodb": "^4.0.1",
     "mongoose": "^5.13.5",
     "tslib": "^2.0.0"

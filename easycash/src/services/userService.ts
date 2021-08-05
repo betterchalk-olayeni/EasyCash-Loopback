@@ -1,16 +1,26 @@
 import { repository } from "@loopback/repository";
-import {HttpErrors} from '@loopback/rest';
+import { HttpErrors } from '@loopback/rest';
 import { Transfer, TransferStatus, User } from "../models";
 import { TransferRepository, UserRepository } from "../repositories";
+import {securityId, UserProfile} from '@loopback/security';
+import * as _ from 'lodash';
 
 //Bcrypt hashing
-import * as bcrypt from 'bcrypt';
+import {compare, hash} from 'bcrypt';
 const saltRounds = 10;
 
 //Custom Errors
 const existingUserError = "User already exists";
 const loginError = "Invalid Password";
 const noUser = "User does not exist";
+const invalidCredentialsError = 'Invalid email or password.';
+
+//Login Credentials
+export type Credentials = {
+    email: string;
+    password: string;
+};
+
 
 export class UserService {
 
@@ -23,50 +33,81 @@ export class UserService {
 
     async createUser(user: User) {
 
-        let {email, password, balance, accounts} = user;
+        let { email, password, balance, accounts } = user;
 
         //Check for already existing Email
-        const existingUser = await this.userRepo.findOne({where: {email: email}})
+        const existingUser = await this.userRepo.findOne({ where: { email: email.toLowerCase() } })
 
-        if(!existingUser){
+        if (!existingUser) {
             //Hashing user's password
-            bcrypt.hash(password, saltRounds, (err, hash) => {
+            hash(password, saltRounds, (err, hash) => {
                 password = hash;
-                return this.userRepo.create({email, password, accounts, balance});
+                return this.userRepo.create({ email, password, accounts, balance });
             })
         }
 
-        else{
+        else {
             throw new HttpErrors.Unauthorized(existingUserError)
         }
 
     }
 
-    
-    async login(user:User){
-        const {email, password} = user;
 
-        const dbUser = await this.userRepo.findOne({where: {email:email}});
+    // async login(user: User) {
+    //     const { email, password } = user;
 
-        if (dbUser){
-            bcrypt.compare(password, dbUser.password, (err, result)=>{
-                if (result === true){
-                    console.log("Logged In");
-                    return dbUser;
-                }
-                else{
-                    throw new HttpErrors.Unauthorized(loginError);
-                }
-            } )
+    //     const dbUser = await this.userRepo.findOne({ where: { email: email.toLowerCase() } });
+
+    //     if (dbUser) {
+    //         compare(password, dbUser.password, (err, result) => {
+    //             if (result === true) {
+    //                 console.log("Logged In");
+    //                 return dbUser;
+    //             }
+    //             else {
+    //                 throw new HttpErrors.Unauthorized(loginError);
+    //             }
+    //         })
+    //     }
+
+    //     else {
+    //         throw new HttpErrors.Unauthorized(noUser);
+    //     }
+
+    // }
+
+
+    async verifyCredentials(credentials: Credentials) {
+        const { email, password } = credentials;
+
+        const foundUser = await this.userRepo.findOne({
+            where: { email: email.toLowerCase() },
+        });
+
+        //If user does not exist
+        if (!foundUser) {
+            throw new HttpErrors.Unauthorized(invalidCredentialsError);
         }
 
-        else{
-            throw new HttpErrors.Unauthorized(noUser);
-        }
+        const passwordMatch = await compare(password, foundUser.password)
+
+        if (!passwordMatch) {
+            throw new HttpErrors.Unauthorized(loginError);
+          }
+      
+          return foundUser;
 
     }
 
-    
+     convertToUserProfile(user: User): UserProfile {
+        return {
+          [securityId]: user.id.toString(),
+        //   name: user.username,
+          id: user.id,
+          email: user.email,
+        };
+      }
+
 
     async updateCash(id: string, balance: number) {
         let foundId = await this.userRepo.findById(id);

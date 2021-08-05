@@ -1,3 +1,4 @@
+import { authenticate } from '@loopback/authentication';
 import { inject } from '@loopback/core';
 import {
   Count,
@@ -33,7 +34,8 @@ export class TransferControllerController {
     @inject(RestBindings.Http.CONTEXT) private requestCtx: RequestContext
   ) {}
 
-  @post('/transfer')
+  @authenticate('jwt')
+  @post('/api/transfer')
   @response(200, {
     description: 'Transfer model instance',
     content: {'application/json': {schema: getModelSchemaRef(Transfer)}},
@@ -73,7 +75,8 @@ export class TransferControllerController {
   //   return this.transferRepository.count(where);
   // }
 
-  @get('/transfer')
+  @authenticate('jwt')
+  @get('/api/transfer')
   @response(200, {
     description: 'Array of Transfer model instances',
     content: {
