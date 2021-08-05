@@ -1,7 +1,7 @@
 {
   "ids": {
-    "User": 7,
-    "Transfer": 2,
+    "User": 8,
+    "Transfer": 4,
     "BankInfo": 1,
     "Account": 1
   },
@@ -11,11 +11,14 @@
       "2": "{\"email\":\"Mobolaji\",\"balance\":0,\"id\":\"2\"}",
       "3": "{\"email\":\"yen@gmail.com\",\"balance\":11344,\"id\":\"3\"}",
       "4": "{\"email\":\"tunde@solabi.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"GTBank\",\"accountNum\":\"0123456789\"}}],\"balance\":16300,\"id\":\"4\"}",
-      "5": "{\"email\":\"blossom@gmail.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"UBA\",\"accountNum\":\"2100547896\"}}],\"balance\":500,\"id\":\"5\"}",
-      "6": "{\"email\":\"olayeni@gmail.com\",\"password\":\"$2b$10$uErlODE1QEXrmg4holbp1eisHMPCmiqLvCQy.ChJQD4EfE5Ha10lm\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"Wema\",\"accountNum\":\"01234567890\"}}],\"balance\":90,\"id\":\"6\"}"
+      "5": "{\"email\":\"blossom@gmail.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"UBA\",\"accountNum\":\"2100547896\"}}],\"balance\":585,\"id\":\"5\"}",
+      "6": "{\"email\":\"olayeni@gmail.com\",\"password\":\"$2b$10$uErlODE1QEXrmg4holbp1eisHMPCmiqLvCQy.ChJQD4EfE5Ha10lm\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"Wema\",\"accountNum\":\"01234567890\"}}],\"balance\":10005,\"id\":\"6\"}",
+      "7": "{\"email\":\"mobolaji@gmail.com\",\"password\":\"$2b$10$aJlb8Pqf0hvTiJC7ih2EYeyIAaZsAkhX0/EsHIyHDIyYYBT.k7UgS\",\"accounts\":[{\"type\":\"Cash\",\"bankInfo\":{\"bankName\":\"GTBank\",\"accountNum\":\"01456987305\"}}],\"balance\":10000,\"id\":\"7\"}"
     },
     "Transfer": {
-      "1": "{\"senderId\":\"5\",\"recipientId\":\"4\",\"amount\":15500,\"sourceAcctId\":\"2100547896\",\"destAcctId\":\"0123456789\",\"txnDate\":\"2021-08-04T09:52:38.336Z\",\"status\":\"Completed\",\"id\":\"1\"}"
+      "1": "{\"senderId\":\"5\",\"recipientId\":\"4\",\"amount\":15500,\"sourceAcctId\":\"2100547896\",\"destAcctId\":\"0123456789\",\"txnDate\":\"2021-08-04T09:52:38.336Z\",\"status\":\"Completed\",\"id\":\"1\"}",
+      "2": "{\"senderId\":\"6\",\"recipientId\":\"5\",\"amount\":85,\"sourceAcctId\":\"01234567890\",\"destAcctId\":\"2100547896\",\"txnDate\":\"2021-08-05T11:48:59.871Z\",\"status\":\"Completed\",\"id\":\"2\"}",
+      "3": "{\"senderId\":\"7\",\"recipientId\":\"6\",\"amount\":10000,\"sourceAcctId\":\"01456987305\",\"destAcctId\":\"01234567890\",\"txnDate\":\"2021-08-05T12:31:32.657Z\",\"status\":\"Completed\",\"id\":\"3\"}"
     },
     "BankInfo": {},
     "Account": {}

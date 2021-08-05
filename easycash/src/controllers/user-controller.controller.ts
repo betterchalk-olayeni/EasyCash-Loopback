@@ -1,39 +1,20 @@
 import { inject } from '@loopback/core';
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
-  SchemaObject
-} from '@loopback/rest';
+import { Filter } from '@loopback/repository';
+import { post, param, get, getModelSchemaRef, patch, requestBody, response, SchemaObject } from '@loopback/rest';
+
+//User Model and service
 import { User } from '../models';
-// import {UserRepository} from '../repositories';
 import { UserService } from '../services/userService';
 
+// import {UserRepository} from '../repositories';
+
 //Authentication imports
-import {
-  Credentials,
-  MyUserService,
-  TokenServiceBindings,
-  UserServiceBindings,
-} from '@loopback/authentication-jwt';
+import { Credentials, MyUserService, TokenServiceBindings, UserServiceBindings } from '@loopback/authentication-jwt';
 import { TokenService } from '@loopback/authentication';
 import { SecurityBindings, securityId, UserProfile } from '@loopback/security';
 
 
+//Credentials Schema object to login
 const CredentialsSchema: SchemaObject = {
   type: 'object',
   required: ['email', 'password'],
@@ -43,6 +24,7 @@ const CredentialsSchema: SchemaObject = {
   },
 };
 
+//The req.body for login route
 export const CredentialsRequestBody = {
   description: 'The input of login function',
   required: true,
@@ -64,6 +46,7 @@ export class UserControllerController {
     public user: UserProfile,
   ) { }
 
+  //Post Signup route
   @post('/api/signup')
   @response(200, {
     description: 'User model instance',
@@ -86,27 +69,7 @@ export class UserControllerController {
   }
 
 
-  // @post('/api/login')
-  // @response(200, {
-  //   description: 'Logged in and Token generated',
-  //   content: {'application/json': {schema: getModelSchemaRef(User)}},
-  // })
-  // async login(
-  //   @requestBody({
-  //     content: {
-  //       'application/json': {
-  //         schema: getModelSchemaRef(User, {
-  //           title: 'Logged in',
-  //           exclude: ['id', "balance", "accounts"],
-  //         }),
-  //       },
-  //     },
-  //   })
-  //   user: Omit<User, 'id'>,
-  // ) {
-  //   return this.userService.login(user);
-  // }
-
+  //Login route
   @post('/api/login', {
     responses: {
       '200': {
@@ -128,8 +91,10 @@ export class UserControllerController {
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
   ): Promise<{ token: string }> {
+
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
+
     // convert a User object into a UserProfile object (reduced set of properties)
     const userProfile = this.userService.convertToUserProfile(user);
 
@@ -139,17 +104,7 @@ export class UserControllerController {
   }
 
   
-  //   @get('/user/count')
-  //   @response(200, {
-  //     description: 'User model count',
-  //     content: {'application/json': {schema: CountSchema}},
-  //   })
-  //   async count(
-  //     @param.where(User) where?: Where<User>,
-  //   ): Promise<Count> {
-  //     return this.userRepository.count(where);
-  //   }
-
+  //Get all users
   @get('/api/users')
   @response(200, {
     description: 'Array of User model instances',
@@ -167,6 +122,43 @@ export class UserControllerController {
   ): Promise<User[]> {
     return this.userService.findAllUsers();
   }
+
+  //Update user's balance
+  @patch('/api/user/{id}')
+  @response(204, {
+    description: 'User PATCH success',
+  })
+  async updateById(
+    @param.path.string('id') id: string,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(User, { exclude: ["id", "email", "accounts"], partial: true }),
+        },
+      },
+    })
+    { balance }: User,
+  ): Promise<void> {
+    await this.userService.updateCash(id, balance);
+  }
+
+
+
+  
+
+
+
+  //   @get('/user/count')
+  //   @response(200, {
+  //     description: 'User model count',
+  //     content: {'application/json': {schema: CountSchema}},
+  //   })
+  //   async count(
+  //     @param.where(User) where?: Where<User>,
+  //   ): Promise<Count> {
+  //     return this.userRepository.count(where);
+  //   }
+
 
   //   @patch('/user')
   //   @response(200, {
@@ -203,23 +195,7 @@ export class UserControllerController {
   //     return this.userRepository.findById(id, filter);
   //   }
 
-  @patch('/api/user/{id}')
-  @response(204, {
-    description: 'User PATCH success',
-  })
-  async updateById(
-    @param.path.string('id') id: string,
-    @requestBody({
-      content: {
-        'application/json': {
-          schema: getModelSchemaRef(User, { exclude: ["id", "email", "accounts"], partial: true }),
-        },
-      },
-    })
-    { balance }: User,
-  ): Promise<void> {
-    await this.userService.updateCash(id, balance);
-  }
+  
 
   //   @put('/user/{id}')
   //   @response(204, {

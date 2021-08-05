@@ -1,44 +1,31 @@
+//Loopback imoports
 import { authenticate } from '@loopback/authentication';
 import { inject } from '@loopback/core';
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
-  RequestContext,
-  RestBindings,
-} from '@loopback/rest';
-import {Transfer, User } from '../models';
-import {TransferRepository} from '../repositories';
-import {UserService} from '../services/userService'
+import {  Filter, repository } from '@loopback/repository';
+import { post, param, get, getModelSchemaRef, requestBody, response, RequestContext, RestBindings, } from '@loopback/rest';
+
+//Model, Repository and service imports
+import { Transfer, User } from '../models';
+import { TransferRepository } from '../repositories';
+import { UserService } from '../services/userService'
+
 
 export class TransferControllerController {
   constructor(
     @inject("user_service")
-    public userService : UserService,
+    public userService: UserService,
     @repository(TransferRepository)
-    public transferRepository : TransferRepository,
+    public transferRepository: TransferRepository,
     @inject(RestBindings.Http.CONTEXT) private requestCtx: RequestContext
-  ) {}
+  ) { }
 
+
+  //Post route for making a transfer
   @authenticate('jwt')
   @post('/api/transfer')
   @response(200, {
     description: 'Transfer model instance',
-    content: {'application/json': {schema: getModelSchemaRef(Transfer)}},
+    content: { 'application/json': { schema: getModelSchemaRef(Transfer) } },
   })
   async create(
     @requestBody({
@@ -46,23 +33,47 @@ export class TransferControllerController {
         'application/json': {
           schema: getModelSchemaRef(Transfer, {
             title: 'NewTransfer',
-            exclude: ['id', "txnDate", "status" ],
+            exclude: ['id', "txnDate", "status"],
             partial: true
           }),
         },
       },
     })
-    transfer: Omit<Transfer, 'id'>,  
+    transfer: Omit<Transfer, 'id'>,
   ) {
-    const {response} = this.requestCtx;
-    try{
+    const { response } = this.requestCtx;
+    try {
       return response.status(200).send(await this.userService.transferMoney(transfer))
     }
-    catch(error){
+    catch (error) {
       return response.status(400).send(`${error}`)
     }
-    
+
   }
+  
+  
+  //Route for getting all transfers
+  @authenticate('jwt')
+  @get('/api/transfer')
+  @response(200, {
+    description: 'Array of Transfer model instances',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'array',
+          items: getModelSchemaRef(Transfer, { includeRelations: true }),
+        },
+      },
+    },
+  })
+  async find(
+    @param.filter(Transfer) filter?: Filter<Transfer>,
+  ): Promise<Transfer[]> {
+    return this.userService.getAllTransfers();
+  }
+
+
+
 
   // @get('/transfer/count')
   // @response(200, {
@@ -75,24 +86,6 @@ export class TransferControllerController {
   //   return this.transferRepository.count(where);
   // }
 
-  @authenticate('jwt')
-  @get('/api/transfer')
-  @response(200, {
-    description: 'Array of Transfer model instances',
-    content: {
-      'application/json': {
-        schema: {
-          type: 'array',
-          items: getModelSchemaRef(Transfer, {includeRelations: true}),
-        },
-      },
-    },
-  })
-  async find(
-    @param.filter(Transfer) filter?: Filter<Transfer>,
-  ): Promise<Transfer[]> {
-    return this.userService.getAllTransfers();
-  }
 
   // @patch('/transfer')
   // @response(200, {

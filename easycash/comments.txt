@@ -15,3 +15,53 @@
   ): Promise<void> {
     return this.userService.updateCash(id, user.balance);
   }
+
+
+
+//User service
+
+    // async login(user: User) {
+    //     const { email, password } = user;
+
+    //     const dbUser = await this.userRepo.findOne({ where: { email: email.toLowerCase() } });
+
+    //     if (dbUser) {
+    //         compare(password, dbUser.password, (err, result) => {
+    //             if (result === true) {
+    //                 console.log("Logged In");
+    //                 return dbUser;
+    //             }
+    //             else {
+    //                 throw new HttpErrors.Unauthorized(loginError);
+    //             }
+    //         })
+    //     }
+
+    //     else {
+    //         throw new HttpErrors.Unauthorized(noUser);
+    //     }
+
+    // }
+
+
+//User controller
+  // @post('/api/login')
+  // @response(200, {
+  //   description: 'Logged in and Token generated',
+  //   content: {'application/json': {schema: getModelSchemaRef(User)}},
+  // })
+  // async login(
+  //   @requestBody({
+  //     content: {
+  //       'application/json': {
+  //         schema: getModelSchemaRef(User, {
+  //           title: 'Logged in',
+  //           exclude: ['id', "balance", "accounts"],
+  //         }),
+  //       },
+  //     },
+  //   })
+  //   user: Omit<User, 'id'>,
+  // ) {
+  //   return this.userService.login(user);
+  // }

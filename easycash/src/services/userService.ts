@@ -2,11 +2,11 @@ import { repository } from "@loopback/repository";
 import { HttpErrors } from '@loopback/rest';
 import { Transfer, TransferStatus, User } from "../models";
 import { TransferRepository, UserRepository } from "../repositories";
-import {securityId, UserProfile} from '@loopback/security';
+import { securityId, UserProfile } from '@loopback/security';
 import * as _ from 'lodash';
 
 //Bcrypt hashing
-import {compare, hash} from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 const saltRounds = 10;
 
 //Custom Errors
@@ -15,7 +15,7 @@ const loginError = "Invalid Password";
 const noUser = "User does not exist";
 const invalidCredentialsError = 'Invalid email or password.';
 
-//Login Credentials
+//Login Credentials requiring email and password
 export type Credentials = {
     email: string;
     password: string;
@@ -35,11 +35,11 @@ export class UserService {
 
         let { email, password, balance, accounts } = user;
 
-        //Check for already existing Email
+        //Check for existing email
         const existingUser = await this.userRepo.findOne({ where: { email: email.toLowerCase() } })
 
         if (!existingUser) {
-            //Hashing user's password
+            //Hashing user's password with 10 rounds of salt
             hash(password, saltRounds, (err, hash) => {
                 password = hash;
                 return this.userRepo.create({ email, password, accounts, balance });
@@ -53,30 +53,7 @@ export class UserService {
     }
 
 
-    // async login(user: User) {
-    //     const { email, password } = user;
-
-    //     const dbUser = await this.userRepo.findOne({ where: { email: email.toLowerCase() } });
-
-    //     if (dbUser) {
-    //         compare(password, dbUser.password, (err, result) => {
-    //             if (result === true) {
-    //                 console.log("Logged In");
-    //                 return dbUser;
-    //             }
-    //             else {
-    //                 throw new HttpErrors.Unauthorized(loginError);
-    //             }
-    //         })
-    //     }
-
-    //     else {
-    //         throw new HttpErrors.Unauthorized(noUser);
-    //     }
-
-    // }
-
-
+    //Verifying the login credentials to generate the JWT
     async verifyCredentials(credentials: Credentials) {
         const { email, password } = credentials;
 
@@ -93,36 +70,40 @@ export class UserService {
 
         if (!passwordMatch) {
             throw new HttpErrors.Unauthorized(loginError);
-          }
-      
-          return foundUser;
+        }
+
+        return foundUser;
 
     }
 
-     convertToUserProfile(user: User): UserProfile {
+    convertToUserProfile(user: User): UserProfile {
         return {
-          [securityId]: user.id.toString(),
-        //   name: user.username,
-          id: user.id,
-          email: user.email,
+            [securityId]: user.id.toString(),
+            //   name: user.username,
+            id: user.id,
+            email: user.email,
         };
-      }
+    }
 
 
+    //Updates the balance of the user
     async updateCash(id: string, balance: number) {
         let foundId = await this.userRepo.findById(id);
         foundId.balance += balance;
         return this.userRepo.updateById(id, foundId)
     }
 
+    //Get all Users
     async findAllUsers() {
         return this.userRepo.find();
     }
 
+    //Get all transactions
     async getAllTransfers() {
         return this.transferRepository.find();
     }
 
+    //Transfer money from one account to the other
     async transferMoney({ senderId, recipientId, amount, sourceAcctId, destAcctId, txnDate, status }: Transfer) {
 
         let sender = await this.userRepo.findById(senderId);
@@ -152,22 +133,3 @@ export class UserService {
     }
 
 }
-
-
-
-// if (sender.balance > 0) {
-//     sender.balance -= amount;
-//     receiver.balance += amount;
-
-//     await this.userRepo.updateById(sender.id, sender);
-//     await this.userRepo.updateById(receiver.id, receiver);
-
-
-
-
-//     return this.transferRepository.create(transfer);
-// }
-
-// else{
-//     throw new Error("Insufficient balance");
-// }
