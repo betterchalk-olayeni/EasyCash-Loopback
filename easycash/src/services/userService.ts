@@ -1,7 +1,15 @@
 import { repository } from "@loopback/repository";
-import { stat } from "fs";
+import {HttpErrors} from '@loopback/rest';
 import { Transfer, TransferStatus, User } from "../models";
 import { TransferRepository, UserRepository } from "../repositories";
+
+//Bcrypt hashing
+import * as bcrypt from 'bcrypt';
+const saltRounds = 10;
+
+//Custom Errors
+const passwordLength = "Password must be at least 5 characters";
+const wrongBalance = "Balance cannot be a negative number";
 
 export class UserService {
 
@@ -13,8 +21,28 @@ export class UserService {
     }
 
     async createUser(user: User) {
-        return this.userRepo.create(user)
+
+        let {email, password, balance, accounts} = user;
+
+        if (password.length > 5){
+
+            //Hashing user's password
+            bcrypt.hash(password, saltRounds, (err, hash) => {
+                password = hash;
+                return this.userRepo.create({email, password, accounts, balance});
+            })
+        }
+
+        else{
+            throw new HttpErrors.Unauthorized(passwordLength)
+        }
+
+
+        
+
     }
+
+    
 
     async updateCash(id: string, balance: number) {
         let foundId = await this.userRepo.findById(id);
@@ -26,19 +54,19 @@ export class UserService {
         return this.userRepo.find();
     }
 
-    async getAllTransfers(){
+    async getAllTransfers() {
         return this.transferRepository.find();
     }
 
-    async transferMoney({senderId, recipientId, amount, sourceAcctId, destAcctId, txnDate, status}:Transfer) {
-        
+    async transferMoney({ senderId, recipientId, amount, sourceAcctId, destAcctId, txnDate, status }: Transfer) {
+
         let sender = await this.userRepo.findById(senderId);
         let receiver = await this.userRepo.findById(recipientId);
 
         sourceAcctId = sender.accounts[0].bankInfo?.accountNum as string;
         destAcctId = receiver.accounts[0].bankInfo?.accountNum as string;
 
-        if(sender.balance >= amount){
+        if (sender.balance >= amount) {
             sender.balance -= amount;
             receiver.balance += amount;
 
@@ -47,11 +75,11 @@ export class UserService {
 
             txnDate = new Date().toISOString();
             status = TransferStatus.COMPLETED;
-            
-            return this.transferRepository.create({senderId, recipientId, amount, sourceAcctId, destAcctId, txnDate, status});
+
+            return this.transferRepository.create({ senderId, recipientId, amount, sourceAcctId, destAcctId, txnDate, status });
         }
-        
-        else{
+
+        else {
             throw new Error('The sender has insufficient balance')
         }
 

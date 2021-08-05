@@ -11,6 +11,15 @@ import path from 'path';
 import {MySequence} from './sequence';
 import { UserService } from './services/userService';
 
+//New Imports for the authentication feature
+import {AuthenticationComponent} from '@loopback/authentication';
+import {
+  JWTAuthenticationComponent,
+  SECURITY_SCHEME_SPEC,
+  UserServiceBindings,
+} from '@loopback/authentication-jwt';
+import {DbDataSource} from './datasources';
+
 export {ApplicationConfig};
 
 export class EasycashApplication extends BootMixin(
@@ -42,6 +51,14 @@ export class EasycashApplication extends BootMixin(
       },
     };
     this.bind("user_service").toClass(UserService)
+
+
+    //Authentication
+    this.component(AuthenticationComponent);
+    // Mount jwt component
+    this.component(JWTAuthenticationComponent);
+    // Bind datasource
+    this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME);
   }
   
 }

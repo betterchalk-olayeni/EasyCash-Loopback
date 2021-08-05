@@ -22,13 +22,15 @@ import {User} from '../models';
 import {UserRepository} from '../repositories';
 import { UserService } from '../services/userService';
 
+//Authentication imports
+
 export class UserControllerController {
   constructor(
     @inject("user_service")
     public userService : UserService,
   ) {}
 
-  @post('/user')
+  @post('/user/signup')
   @response(200, {
     description: 'User model instance',
     content: {'application/json': {schema: getModelSchemaRef(User)}},
@@ -45,7 +47,7 @@ export class UserControllerController {
       },
     })
     user: Omit<User, 'id'>,
-  ): Promise<User> {
+  ){
     return this.userService.createUser(user);
   }
 

@@ -1,6 +1,6 @@
 import { Entity, model, property } from '@loopback/repository';
 
-enum AccountType {
+export enum AccountType {
   BANK = 'Bank',
   CASH = 'Cash',
   CREDITCARD = 'Credit Card'

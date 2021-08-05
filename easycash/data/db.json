@@ -1,6 +1,6 @@
 {
   "ids": {
-    "User": 6,
+    "User": 7,
     "Transfer": 2,
     "BankInfo": 1,
     "Account": 1
@@ -11,7 +11,8 @@
       "2": "{\"email\":\"Mobolaji\",\"balance\":0,\"id\":\"2\"}",
       "3": "{\"email\":\"yen@gmail.com\",\"balance\":11344,\"id\":\"3\"}",
       "4": "{\"email\":\"tunde@solabi.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"GTBank\",\"accountNum\":\"0123456789\"}}],\"balance\":16300,\"id\":\"4\"}",
-      "5": "{\"email\":\"blossom@gmail.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"UBA\",\"accountNum\":\"2100547896\"}}],\"balance\":500,\"id\":\"5\"}"
+      "5": "{\"email\":\"blossom@gmail.com\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"UBA\",\"accountNum\":\"2100547896\"}}],\"balance\":500,\"id\":\"5\"}",
+      "6": "{\"email\":\"olayeni@gmail.com\",\"password\":\"$2b$10$uErlODE1QEXrmg4holbp1eisHMPCmiqLvCQy.ChJQD4EfE5Ha10lm\",\"accounts\":[{\"type\":\"Bank\",\"bankInfo\":{\"bankName\":\"Wema\",\"accountNum\":\"01234567890\"}}],\"balance\":90,\"id\":\"6\"}"
     },
     "Transfer": {
       "1": "{\"senderId\":\"5\",\"recipientId\":\"4\",\"amount\":15500,\"sourceAcctId\":\"2100547896\",\"destAcctId\":\"0123456789\",\"txnDate\":\"2021-08-04T09:52:38.336Z\",\"status\":\"Completed\",\"id\":\"1\"}"
