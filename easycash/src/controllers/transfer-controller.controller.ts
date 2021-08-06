@@ -1,4 +1,4 @@
-//Loopback imoports
+//Loopback imports
 import { authenticate } from '@loopback/authentication';
 import { inject } from '@loopback/core';
 import {  Filter, repository } from '@loopback/repository';
@@ -43,7 +43,7 @@ export class TransferControllerController {
   ) {
     const { response } = this.requestCtx;
     try {
-      return response.status(200).send(await this.userService.transferMoney(transfer))
+      return this.userService.transferMoney(transfer)
     }
     catch (error) {
       return response.status(400).send(`${error}`)

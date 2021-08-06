@@ -1,3 +1,4 @@
+//Loopback imports
 import { inject } from '@loopback/core';
 import { Filter } from '@loopback/repository';
 import { post, param, get, getModelSchemaRef, patch, requestBody, response, SchemaObject } from '@loopback/rest';
@@ -33,6 +34,7 @@ export const CredentialsRequestBody = {
   },
 };
 
+
 export class UserControllerController {
   constructor(
     @inject("user_service")
@@ -46,6 +48,8 @@ export class UserControllerController {
     public user: UserProfile,
   ) { }
 
+
+  
   //Post Signup route
   @post('/api/signup')
   @response(200, {
@@ -67,6 +71,7 @@ export class UserControllerController {
   ) {
     return this.userService.createUser(user);
   }
+
 
 
   //Login route
@@ -103,6 +108,7 @@ export class UserControllerController {
     return { token };
   }
 
+
   
   //Get all users
   @get('/api/users')
@@ -122,6 +128,8 @@ export class UserControllerController {
   ): Promise<User[]> {
     return this.userService.findAllUsers();
   }
+
+
 
   //Update user's balance
   @patch('/api/user/{id}')
